@@ -59,8 +59,8 @@ PublishRound(t+1, E)
 ```
 
 ### Search signal
-Receiver Rj goes online at round t2 (last time it was online at round t1). It retrieves ciphertext Et 
-and computes `v = Decrypt(mpk, Et, sk_j)`. If v = v' (where v' is value obtained at round t1), then
+Receiver Rj goes online at round t2 (last time it was online at round t1). It retrieves ciphertext E_t2 
+and computes `v = Decrypt(mpk, E_t2, sk_j)`. If v = v' (where v' is value obtained at round t1), then
 no signal was received. Otherwise, it uses binary search to find out at which round signal has been sent
 (by looking up for round (t2-t1)/2, computing v'' and comparing with v', etc.).
 
