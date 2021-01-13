@@ -34,7 +34,7 @@ Protocol has 3 phases:
   reading rounds (i.e. accessing blockchain) to be expensive operation.
   
 ### Key generation & derivation
-```
+```python
 # Trusted party generates master key:
 mpk, msk = Setup(SECURITY_BITS)
 
@@ -47,7 +47,7 @@ for j in range(m):
 We publish mpk and send sk_j privatly to corresponding receivers.
 
 ### Send signal to Rj
-```
+```python
 x = [0] * m
 x[j] = 1
 E = Encrypt(mpk, x)
@@ -69,8 +69,8 @@ At first, lets define auxilary function `findFirstSignal(t_start, t_end)` that r
 `E_t_start = E_t_i && ∀t_j > t_i (E_t_start ≠ E_t_j)` (E_i is short hand for retrieveing ciphertext 
 from i-th round, i.e. `E_i = Round(i)`).
 
-```
-findFirstSignal(t_s, t_e):
+```python
+def findFirstSignal(t_s, t_e):
   if t_s == t_e:
     return t_e
   m = ceil((t_s + t_e) / 2)
@@ -81,8 +81,8 @@ findFirstSignal(t_s, t_e):
 ```
 
 Then it simple to define `findAllSignals(t_start, t_end)` function:
-```
-findAllSignals(t_s, t_e):
+```python
+def findAllSignals(t_s, t_e):
   t_i = findFirstSignal(t_s, t_e)
   if t_i == t_e:
     return []
