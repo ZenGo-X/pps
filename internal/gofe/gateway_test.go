@@ -53,7 +53,7 @@ func TestCiphertextIsMultiplicative(t *testing.T) {
 	mpk, sk, err := GenerateMasterKeys(2)
 	assert.NoError(t, err, "keygen failed")
 
-	// x1 = [10 ]
+	// x1 = [1 0]
 	x1 := gofe.NewConstantVector(2, big.NewInt(0))
 	x1[0] = big.NewInt(1)
 	// x2 = [0 1]
