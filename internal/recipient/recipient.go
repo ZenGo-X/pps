@@ -21,7 +21,7 @@ type Party struct {
 //
 // It's an error if this file already exist
 func (p *Party) SaveRecipient(dir string) error {
-	err := os.MkdirAll(dir, 0660)
+	err := os.MkdirAll(dir, 0770)
 	if err != nil {
 		return errors.Wrap(err, "create dir")
 	}
