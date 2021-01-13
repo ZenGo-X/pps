@@ -17,9 +17,10 @@ easily done distributedly without trusted party.
 We will briefly describe proposed protocol.
 
 We have: 
-* n senders S1,...,Sn
-* m receivers R1,...,Rn
-* t rounds
+* **n** senders S1,...,Sn
+* **m** receivers R1,...,Rm
+* **t** rounds. Every round is represented a ciphertext **E** which is a vector of **m** elements.
+  **E** might be published at blockchain, e.g. in a smart-contract.
 
 Protocol has 3 phases:
 * Setup: key generation & derivation. Executed by trusted party, but just for simplicity of demo.
@@ -29,7 +30,8 @@ Protocol has 3 phases:
 * Search. Executes when receiver goes online. E.g. receiver was online last time and last round he saw
   was t1. Now he comes back to the Internet and sees new round t2. He can find out if someone sent a
   a signal to him just by knowing rounds t1 & t2. If he received a signal, he can find an exact round
-  on which signal was made for O(log(t2-t1)).
+  on which signal was sent using logarithmic search (i.e. for O(log(t2-t1)). It's important as we expect 
+  reading rounds (i.e. accessing blockchain) to be expensive operation.
   
 ### Key generation & derivation
 ```
@@ -59,10 +61,33 @@ PublishRound(t+1, E)
 ```
 
 ### Search signal
-Receiver Rj goes online at round t2 (last time it was online at round t1). It retrieves ciphertext E_t2 
-and computes `v = Decrypt(mpk, E_t2, sk_j)`. If v = v' (where v' is value obtained at round t1), then
-no signal was received. Otherwise, it uses binary search to find out at which round signal has been sent
-(by looking up for round (t2-t1)/2, computing v'' and comparing with v', etc.).
+Receiver Rj goes online at round t2 (last time it was online at round t1). Note that receiver may
+catch several signals. We'll define function `findAllSignals(t_start, t_end)` that uses logarithmic
+search to find all signals between t_start and t_end.
+
+At first, lets define auxilary function `findFirstSignal(t_start, t_end)` that returns t_i such as 
+`E_t_start = E_t_i && ∀t_j > t_i (E_t_start ≠ E_t_j)` (E_i is short hand for retrieveing ciphertext 
+from i-th round, i.e. `E_i = Round(i)`).
+
+```
+findFirstSignal(t_s, t_e):
+  if t_s == t_e:
+    return t_e
+  m = ceil((t_s + t_e) / 2)
+  if E_t_s == E_m:
+    return findFirstSignal(m, t_e)
+  else:
+    return findFirstSignal(t_s, m-1)
+```
+
+Then it simple to define `findAllSignals(t_start, t_end)` function:
+```
+findAllSignals(t_s, t_e):
+  t_i = findFirstSignal(t_s, t_e)
+  if t_i == t_e:
+    return []
+  return [t_i+1] ++ findAllSignals(t_i+1, t_e)
+```
 
 ## Run demo
 
