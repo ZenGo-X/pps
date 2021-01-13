@@ -49,31 +49,36 @@ func TestEncryptDecrypt(t *testing.T) {
 
 }
 
-func TestCiphertextIsAdditive(t *testing.T) {
-	mpk, sk, err := GenerateMasterKeys(5)
+func TestCiphertextIsMultiplicative(t *testing.T) {
+	mpk, sk, err := GenerateMasterKeys(2)
 	assert.NoError(t, err, "keygen failed")
 
-	// x1 = [0 0 1 0 0]
-	x1 := gofe.NewConstantVector(5, big.NewInt(0))
-	x1[2] = big.NewInt(1)
-	// x2 = [0 0 0 1 0]
-	plaintext2 := gofe.NewConstantVector(5, big.NewInt(0))
-	plaintext2[3] = big.NewInt(1)
+	// x1 = [10 ]
+	x1 := gofe.NewConstantVector(2, big.NewInt(0))
+	x1[0] = big.NewInt(1)
+	// x2 = [0 1]
+	x2 := gofe.NewConstantVector(2, big.NewInt(0))
+	x2[1] = big.NewInt(1)
 
 	// e1 = Encrypt(mpk, x1)
 	e1, err := Encrypt(mpk, x1)
 	assert.NoError(t, err, "encrypt x1")
 
-	// e2 = e1 + Encrypt(mpk, x2)
+	// e2 = e1 * Encrypt(mpk, x2)
 	e2, err := Encrypt(mpk, x1)
 	assert.NoError(t, err, "encrypt x1")
-	err = e2.Add(&e1)
-	assert.NoError(t, err, "e1+e2")
+	err = e2.Mul(&e1)
+	assert.NoError(t, err, "e1*e2")
 
-	// check that Decrypt(mpk, sk2, e2) == 1
-	v2Sk2, err := Decrypt(mpk, sk[2], e2)
-	assert.NoError(t, err, "decrypt e1+e2 using sk2")
-	assert.Equal(t, big.NewInt(1), v2Sk2, "incorrectly decrypted e1+e2 using sk2")
+	// check that Decrypt(mpk, sk0, e1) == 1
+	v1Sk0, err := Decrypt(mpk, sk[0], e1)
+	assert.NoError(t, err, "decrypt e1 using sk0")
+	assert.Equal(t, big.NewInt(1), v1Sk0, "incorrectly decrypted e1 using sk0")
+
+	// check that Decrypt(mpk, sk0, e2) == 1
+	v2Sk0, err := Decrypt(mpk, sk[0], e2)
+	assert.NoError(t, err, "decrypt e1+e2 using sk0")
+	assert.Equal(t, big.NewInt(1), v2Sk0, "incorrectly decrypted e1+e2 using sk0")
 }
 
 func TestCiphertextIsAdditive2(t *testing.T) {
@@ -93,12 +98,12 @@ func TestCiphertextIsAdditive2(t *testing.T) {
 
 	ciphertext2, err := Encrypt(mpk, plaintext2)
 	assert.NoError(t, err, "encrypt plaintext2")
-	err = ciphertext2.Add(&ciphertext1)
+	err = ciphertext2.Mul(&ciphertext1)
 	assert.NoError(t, err, "plaintext1+plaintext2")
 
 	ciphertext3, err := Encrypt(mpk, plaintext2)
 	assert.NoError(t, err, "encrypt plaintext3")
-	err = ciphertext3.Add(&ciphertext2)
+	err = ciphertext3.Mul(&ciphertext2)
 	assert.NoError(t, err, "plaintext2+plaintext3")
 
 	v1Sk2, err := Decrypt(mpk, sk[2], ciphertext1)

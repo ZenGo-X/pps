@@ -22,7 +22,7 @@ type Ciphertext struct {
 //
 // Might result in error, e.g. if adding ciphertext of different length.
 // In this case, ciphertext is not modified.
-func (c *Ciphertext) Add(another *Ciphertext) error {
+func (c *Ciphertext) Mul(another *Ciphertext) error {
 	v1 := ([]*big.Int)(c.Vector)
 	v2 := ([]*big.Int)(another.Vector)
 
@@ -30,7 +30,9 @@ func (c *Ciphertext) Add(another *Ciphertext) error {
 		return errors.New("given ciphertexts have different lengths")
 	}
 
-	c.Vector = c.Vector.Add(another.Vector)
+	for i, x := range another.Vector {
+		c.Vector[i] = new(big.Int).Mul(c.Vector[i], x)
+	}
 
 	return nil
 }
