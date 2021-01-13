@@ -36,25 +36,25 @@ Protocol has 3 phases:
 ### Key generation & derivation
 ```
 # Trusted party generates master key:
-mpk, msk <- Setup(SECURITY_BITS)
+mpk, msk = Setup(SECURITY_BITS)
 
 # For every Rj we derive key:
 for j in range(m):
-  y := [0; m] # array of n zeroes
+  y = [0] * m
   y[j] = 1
-  sk[j] <- KeyDer(mpk, y)
+  sk[j] = KeyDer(mpk, y)
 ```
 We publish mpk and send sk_j privatly to corresponding receivers.
 
 ### Send signal to Rj
 ```
-x := [0; 32]
+x = [0] * m
 x[j] = 1
-E := Encrypt(mpk, x)
+E = Encrypt(mpk, x)
 
-t <- CurrentRound
+t = CurrentRound()
 if t > 1:
-  E_previous <- Round(t-1)
+  E_previous = Round(t-1)
   E = E_previous + E
   
 PublishRound(t+1, E)
