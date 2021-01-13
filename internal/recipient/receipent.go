@@ -21,4 +21,3 @@ func (p *Party) SaveRecipient(path string, i int) error {
 func LoadRecipient(path string, i int) (*Party, error) {
 	return nil, errors.New("not implemented")
 }
-

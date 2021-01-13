@@ -47,5 +47,5 @@ func (r *Repository) PublishRound(n int, ciphertext *data.Ciphertext) error {
 
 // Retrieves master public key
 func (r *Repository) GetMPK() (data.MPK, error) {
-	return data.MPK {}, errors.New("not implemented")
+	return data.MPK{}, errors.New("not implemented")
 }
