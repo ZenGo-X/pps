@@ -1,3 +1,4 @@
+PPS - Privacy Preserving Signallin
 ## Overview
 We present PoC demo application based on FE inner product algorithm (on top of
 DDH assumption, proposed in [this paper][paper]) that demonstrates how FE can
