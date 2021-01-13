@@ -47,7 +47,7 @@ func Encrypt(mpk data.MPK, vector gofe.Vector) (data.Ciphertext, error) {
 	return data.Ciphertext{Vector: ciphertext}, nil
 }
 
-func Decrypt(mpk data.MPK, sk data.RecipientSecretKey, ciphertext data.Ciphertext) (*big.Int, error) {
+func Decrypt(mpk data.MPK, sk data.RecipientSecretKey, ciphertext *data.Ciphertext) (*big.Int, error) {
 	y := gofe.NewConstantVector(mpk.DDH.Params.L, big.NewInt(0))
 	y[sk.I] = big.NewInt(1)
 	return mpk.DDH.Decrypt(ciphertext.Vector, sk.DerivedKey, y)

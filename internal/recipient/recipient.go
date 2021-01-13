@@ -25,7 +25,7 @@ func (p *Party) SaveRecipient(dir string) error {
 	if err != nil {
 		return errors.Wrap(err, "create dir")
 	}
-	filepath := path.Join(dir, fmt.Sprintf("party_%d.json", p.Secret.I))
+	filepath := path.Join(dir, fmt.Sprintf("party_%d.json", p.Secret.I+1))
 	file, err := os.OpenFile(filepath, os.O_RDWR|os.O_CREATE|os.O_EXCL, 0600)
 	if err != nil {
 		return errors.Wrap(err, "create file")

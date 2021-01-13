@@ -93,45 +93,60 @@ def findAllSignals(t_s, t_e):
 
 ### Run keygen
 ```bash
-go run ./cmd/demo keygen -parties 5
+go run ./cli keygen --parties 5
 ```
 It will create files:
-* `stand/rounds/round0.json` containing mpk
+* `stand/repo/round0.json` containing mpk
 * `stand/parties/partyN.json` N files for every receiver containing sk_j
 
 ### Send signal
 ```bash
-go run ./cmd/demo send-signal -party 2
+go run ./cli send-signal --party 2
 ```
 
 Outputs:
 ```
-You successfully sent signal to party 2 in round 1!
+You successfully sent encrypted signal to party 2 in round 1!
 ```
 
-It will create file `rounds/round1.json` containing a ciphertext which won't tell you that party 2 
+It will create file `stand/repo/round1.json` containing a ciphertext which won't tell you that party 2 
 received a signal if you don't know sk_2.
 
 Send a few more signals:
 ```bash
-go run ./cmd/demo send-signal -party 3
-go run ./cmd/demo send-signal -party 4
-go run ./cmd/demo send-signal -party 5
+go run ./cli send-signal --party 3
+go run ./cli send-signal --party 4
+go run ./cli send-signal --party 5
+go run ./cli send-signal --party 4
 ```
 
 ### Search
 ```bash
-go run ./cmd/demo search -party 2
+go run ./cli search --party 4 --from 0 --to 5
 ```
 
 Outputs:
 ```
-Party 2 is waking up!
-Current round is 4... Party received a signal!
-Looking for axact round where signal was sent...
+Party received signal(s)!
+Searching received signal within rounds [0;5]
+Accessing round 3... v_0 != v_3
+Accessing round 1... v_0 == v_1
+Accessing round 2... v_1 == v_2
+Received signal at round 3!
+More signals available!
+Searching received signal within rounds [3;5]
+Accessing round 4... v_3 == v_4
+Accessing round 5... v_4 != v_5
+Received signal at round 5!
+No more signals available
+```
 
-Round 2, v != v'
-Round 1, v = v'
+Meanwhile, party 1 received no signal:
+```bash
+go run ./cli search --party 1 --from 0 --to 5
+```
 
-Party received a signal at round 1.
+Outputs:
+```
+Party received no signal within rounds [0;5]
 ```
