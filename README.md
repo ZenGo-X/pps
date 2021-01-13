@@ -66,15 +66,15 @@ catch several signals. We'll define function `findAllSignals(t_start, t_end)` th
 search to find all signals between t_start and t_end.
 
 At first, lets define auxilary function `findFirstSignal(t_start, t_end)` that returns t_i such as 
-`E_t_start = E_t_i && ∀t_j > t_i (E_t_start ≠ E_t_j)` (E_i is short hand for retrieveing ciphertext 
-from i-th round, i.e. `E_i = Round(i)`).
+`v_t_start = v_t_i && ∀t_j > t_i (v_t_start ≠ v_t_j)` (where `v_i = Decrypt(mpk, E_i, sk_j)`, and 
+E_i is short hand for retrieveing ciphertext from i-th round, i.e. `E_i = Round(i)`).
 
 ```python
 def findFirstSignal(t_s, t_e):
   if t_s == t_e:
     return t_e
   m = ceil((t_s + t_e) / 2)
-  if E_t_s == E_m:
+  if v_t_s == v_m:
     return findFirstSignal(m, t_e)
   else:
     return findFirstSignal(t_s, m-1)
