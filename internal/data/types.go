@@ -18,7 +18,7 @@ type Ciphertext struct {
 	Vector gofe.Vector
 }
 
-// Performs ciphertext += anotherCiphertext
+// Performs ciphertext *= anotherCiphertext
 //
 // Might result in error, e.g. if adding ciphertext of different length.
 // In this case, ciphertext is not modified.

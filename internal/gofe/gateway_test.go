@@ -77,11 +77,12 @@ func TestCiphertextIsMultiplicative(t *testing.T) {
 
 	// check that Decrypt(mpk, sk0, e2) == 1
 	v2Sk0, err := Decrypt(mpk, sk[0], e2)
-	assert.NoError(t, err, "decrypt e1+e2 using sk0")
-	assert.Equal(t, big.NewInt(1), v2Sk0, "incorrectly decrypted e1+e2 using sk0")
+	assert.NoError(t, err, "decrypt e1*e2 using sk0")
+	assert.Equal(t, big.NewInt(1), v2Sk0, "incorrectly decrypted e1*e2 using sk0")
 }
 
-func TestCiphertextIsAdditive2(t *testing.T) {
+// Same as TestCiphertextIsMultiplicative but larger
+func TestCiphertextIsMultiplicative2(t *testing.T) {
 	mpk, sk, err := GenerateMasterKeys(5)
 	assert.NoError(t, err, "keygen failed")
 
@@ -99,12 +100,12 @@ func TestCiphertextIsAdditive2(t *testing.T) {
 	ciphertext2, err := Encrypt(mpk, plaintext2)
 	assert.NoError(t, err, "encrypt plaintext2")
 	err = ciphertext2.Mul(&ciphertext1)
-	assert.NoError(t, err, "plaintext1+plaintext2")
+	assert.NoError(t, err, "ciphertext1*ciphertext2")
 
-	ciphertext3, err := Encrypt(mpk, plaintext2)
+	ciphertext3, err := Encrypt(mpk, plaintext3)
 	assert.NoError(t, err, "encrypt plaintext3")
 	err = ciphertext3.Mul(&ciphertext2)
-	assert.NoError(t, err, "plaintext2+plaintext3")
+	assert.NoError(t, err, "ciphertext2*ciphertext3")
 
 	v1Sk2, err := Decrypt(mpk, sk[2], ciphertext1)
 	assert.NoError(t, err, "decrypt ciphertext1 using sk2")
