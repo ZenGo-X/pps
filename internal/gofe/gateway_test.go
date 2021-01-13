@@ -65,7 +65,7 @@ func TestCiphertextIsMultiplicative(t *testing.T) {
 	assert.NoError(t, err, "encrypt x1")
 
 	// e2 = e1 * Encrypt(mpk, x2)
-	e2, err := Encrypt(mpk, x1)
+	e2, err := Encrypt(mpk, x2)
 	assert.NoError(t, err, "encrypt x1")
 	err = e2.Mul(&e1)
 	assert.NoError(t, err, "e1*e2")
